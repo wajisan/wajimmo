@@ -1,0 +1,112 @@
+<!doctype html>
+
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Wajimmo - Outils immobilier</title>
+    <meta name="description" content="Wajimmo">
+    <meta name="author" content="SiteApp">
+
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="css/bootstrap.min.css?v=1.0">
+    <link rel="stylesheet" href="css/style.css?v=1.0">
+
+</head>
+
+<body>
+
+    <div id="app">
+
+        <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+            <h5 class="my-0 mr-md-auto font-weight-normal">Wajimmo</h5>
+        </div>
+
+        <!-- Module Taux endettement -->
+        <div class="module">
+            <div class="modal-body">
+                <h5>Taux d'endettement</h5>
+                <div class="col d-block">
+                    <label>Revenus nets mensuels (avant impôts)</label>
+                    <input placeholder="Revenu net" v-model.number="module.debt.netIncome" type="number" class="form-control" />
+
+                    <label>Autres revenus mensuels (pensions, primes...)</label>
+                    <input placeholder="Autres revenu" v-model.number="module.debt.otherIncome" type="number" class="form-control" />
+
+                    <label>Loyer ou crédit immobilier mensuels</label>
+                    <input placeholder="Loyer ou prêt immo" v-model.number="module.debt.charges" type="number" class="form-control" />
+
+                    <label>Autres charges mensuels (crédits conso...)</label>
+                    <input placeholder="Crédits" v-model.number="module.debt.credit" type="number" class="form-control" />
+
+
+                    <button type="button" class="btn btn-secondary mt-5 float-right" v-on:click="setDebtPercent()">Calculer</button>
+                </div>
+                <div v-if="module.debt.debtPercent != 0">
+                    La majorité des banques favorisent les prêts aux particuliers ayant un taux d'endettement inférieur à {{stateValues.bankLike}}%.
+                    <div v-if="module.debt.debtPercent < stateValues.bankLike" class="positive-color">
+                        Votre taux d'endettement est de {{ module.debt.debtPercent }} %
+                    </div>
+                    <div v-if="module.debt.debtPercent >= stateValues.bankLike" class="negative-color">
+                        Votre taux d'endettement est de {{ module.debt.debtPercent }} %
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module rentabilité -->
+        <div class="mt-5 module">
+            <div class="modal-body">
+                <h5>Simulateur achat adjudication</h5>
+                <div class="col d-block">
+                    <label>Offre sur le bien</label>
+                    <input placeholder="Prix du bien (mise à prix)" v-model.number="module.profitability.price" type="number" class="form-control" />
+
+                    <label>Surface (m²)</label>
+                    <input placeholder="Surface (m²)" v-model.number="module.profitability.area" type="number" class="form-control" />
+
+                    <div>
+                        <label>Frais de notaire</label>
+                        <input placeholder="Frais de notaire" v-model.number="module.profitability.nfees" type="number" class="form-control" />
+                        <button type="button" class="btn btn-secondary" v-on:click="getNFees()">Calculer frais moyen</button>
+                    </div>
+
+                    <label>Frais préalable</label>
+                    <input placeholder="Frais préalable" v-model.number="module.profitability.pfees" type="number" class="form-control" />
+
+                    <label>Frais avocat</label>
+                    <input placeholder="Frais d'avocat'" v-model.number="module.profitability.afees" type="number" class="form-control" />
+
+                    <label>Frais de travaux</label>
+                    <input placeholder="Frais de travaux" v-model.number="module.profitability.tfees" type="number" class="form-control" />
+
+                    <label>Prix au m² sur le marché</label>
+                    <div>
+                        <input placeholder="prix au m²" v-model.number="module.profitability.pricePerMeter" type="number" class="form-control" />
+                        <button type="button" class="btn btn-secondary" v-on:click="getPricePerMeter()">Estimer</button>
+                    </div>
+                    <button type="button" class="btn btn-secondary mt-5 float-right" v-on:click="setProfitability()">Calculer</button>
+                </div>
+                <div v-if="module.profitability.profit != 0">
+                    Votre depenseriez {{module.profitability.totalCharge}}€ pour un bien qui vaut {{ module.profitability.estimatePrice }}€ sur le marché.
+                    <div v-if="module.profitability.profit > 0" class="positive-color">
+                        Vous seriez bénéficiaire de {{this.module.profitability.profit}}€.
+                    </div>
+                    <div v-if="module.profitability.profit < 0" class="negative-color">
+                        Vous seriez en déficit de {{this.module.profitability.profit}}€.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div>
+        <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+	<script src="https://unpkg.com/vue@2.5.13/dist/vue.min.js" ></script>
+        <script src="js/main.js"></script>
+    </div>
+</body>
+
+</html>
